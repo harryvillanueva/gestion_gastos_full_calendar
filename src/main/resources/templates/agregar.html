@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos/cabecero::cabecero-seccion(titulo='agregar Movimiento')}"/>
+<body>
+
+
+<div th:replace="~{fragmentos/navegacion::navegacion-seccion}"/>
+
+<div class="container">
+    <div class="container text-center" style="margin:30px">
+        <h2> Agregar Movimiento</h2>
+    </div>
+</div>
+
+<div class="container">
+
+
+    <form action="/agregar" method="post" modelAttribute="movimientoForma" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="monto" class="form-label">Monto</label>
+            <input type="text" class="form-control" id="monto" name="monto" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="movimientoTipo" class="form-label">Tipo de Movimiento</label>
+            <select  class="form-select" id="movimientoTipo" name="movimientoTipo" >
+                <option value="Ingreso">Ingreso</option>
+                <option value="Gasto" selected>Gasto</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="fechaMovimiento" class="form-label">fecha de Movimiento</label>
+            <input type="date" class="form-control" id="fechaMovimiento" name="fechaMovimiento" required >
+        </div>
+
+        <div class="mb-3">
+            <label for="descripcion" class="form-label">Descripcion</label>
+            <input type="text" class="form-control" id="descripcion" name="descripcion" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="categoria" class="form-label">Categoria</label>
+            <select  class="form-select" id="categoria" name="categoria" required>
+                <option value="" disabled selected>-- Seleccione una Categoría --</option>
+                <option th:each="cat : ${categorias}"
+                        th:value="${cat.idCategoria}"
+                        th:text="${cat.nombre}">
+                </option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="file" class="form-label">Comprobante (Opcional, max 5MB)</label>
+            <input type="file" class="form-control" id="file" name="file">
+        </div>
+
+        <div class="container text-center">
+            <button type="submit" class="btn btn-warning btn-sm me-3">Agregar</button>
+            <a href="/" class="btn btn-danger btn-sm">Regresar</a>
+        </div>
+
+    </form>
+</div>
+<div th:replace="~{fragmentos/pie-pagina::pie-pagina-seccion}"/>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos/cabecero::cabecero-seccion(titulo='Agregar Categoría')}"/>
+<body>
+<div th:replace="~{fragmentos/navegacion::navegacion-seccion}"/>
+
+<div class="container">
+  <div class="container text-center" style="margin:30px">
+    <h2> Agregar Categoría</h2>
+  </div>
+
+  <form th:action="@{/categorias/agregar}" method="post" modelAttribute="categoriaForma">
+    <div class="mb-3">
+      <label for="nombre" class="form-label">Nombre de la Categoría</label>
+      <input type="text" class="form-control" id="nombre" name="nombre" required>
+    </div>
+    <div class="container text-center">
+      <button type="submit" class="btn btn-primary btn-sm me-3">Guardar</button>
+      <a th:href="@{/categorias}" class="btn btn-danger btn-sm">Regresar</a>
+    </div>
+  </form>
+</div>
+
+<div th:replace="~{fragmentos/pie-pagina::pie-pagina-seccion}"/>
+</body>
+</html>

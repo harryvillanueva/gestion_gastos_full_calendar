@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos/cabecero::cabecero-seccion(titulo='Editar Categoría')}"/>
+<body>
+<div th:replace="~{fragmentos/navegacion::navegacion-seccion}"/>
+
+<div class="container">
+  <div class="container text-center" style="margin:30px">
+    <h2> Editar Categoría</h2>
+  </div>
+
+  <form th:action="@{/categorias/editar}" method="post" th:object="${categoria}">
+    <input type="hidden" th:field="*{idCategoria}"/>
+    <div class="mb-3">
+      <label for="nombre" class="form-label">Nombre de la Categoría</label>
+      <input type="text" class="form-control" id="nombre" name="nombre" required th:field="*{nombre}">
+    </div>
+    <div class="container text-center">
+      <button type="submit" class="btn btn-warning btn-sm me-3">Actualizar</button>
+      <a th:href="@{/categorias}" class="btn btn-danger btn-sm">Regresar</a>
+    </div>
+  </form>
+</div>
+
+<div th:replace="~{fragmentos/pie-pagina::pie-pagina-seccion}"/>
+</body>
+</html>

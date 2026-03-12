@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+
+<div th:fragment="pie-pagina-seccion" th:remove="tag">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+
+        function confirmarEliminar(event) {
+        event.preventDefault();
+        const url = event.currentTarget.href;
+
+        Swal.fire({
+            title: "¿Estás seguro?",
+            text: "¡No podrás revertir esto!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "¡Sí, bórralo!",
+            cancelButtonText: "Cancelar"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Si confirma, simplemente vamos a la URL de eliminar.
+                // El servidor se encargará del mensaje de éxito.
+                window.location.href = url;
+            }
+        });
+    }
+    </script>
+
+
+    <script th:if="${msg_exito != null}">
+
+        // Obtenemos el mensaje que envió el controlador
+        var mensaje = "[[${msg_exito}]]";
+
+        // ¡Mostramos tu popup de éxito!
+        Swal.fire({
+              position: "center",
+              icon: "success",
+              title: mensaje, // Usamos el mensaje del controlador
+              showConfirmButton: false,
+              timer: 5000
+        });
+    </script>
+
+</div>
+
+</html>

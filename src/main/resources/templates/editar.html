@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos/cabecero::cabecero-seccion(titulo='Editar Contactos')}"/>
+<body>
+
+
+<div th:replace="~{fragmentos/navegacion::navegacion-seccion}"/>
+
+<div class="container">
+  <div class="container text-center" style="margin:30px">
+    <h2> Editar contacto</h2>
+  </div>
+</div>
+
+<div class="container">
+
+  <form action="/editar" method="post" th:object="${movimiento}" enctype="multipart/form-data">
+
+    <input type="hidden" th:field="*{idMovimiento}"/>
+
+    <div class="mb-3">
+      <label for="monto" class="form-label">Monto</label>
+      <input type="text" class="form-control" id="monto" name="monto" required th:field="*{monto}">
+    </div>
+
+    <div class="mb-3">
+      <label for="movimientoTipo" class="form-label">Tipo de Movimiento</label>
+      <select  class="form-select" id="movimientoTipo" name="movimientoTipo" th:field="*{movimientoTipo}">
+        <option value="Ingreso">Ingreso</option>
+        <option value="Gasto" >Gasto</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label for="fechaMovimiento" class="form-label">fecha de Movimiento</label>
+      <input type="date" class="form-control" id="fechaMovimiento" name="fechaMovimiento" required  th:field="*{fechaMovimiento}">
+    </div>
+
+    <div class="mb-3">
+      <label for="descripcion" class="form-label">Descripcion</label>
+      <input type="text" class="form-control" id="descripcion" name="descripcion" required th:field="*{descripcion}">
+    </div>
+
+    <div class="mb-3">
+      <label for="categoria" class="form-label">Categoria</label>
+      <select  class="form-select" id="categoria" name="categoria" th:field="*{categoria}">
+        <option value="" disabled>-- Seleccione una Categoría --</option>
+        <option th:each="cat : ${categorias}"
+                th:value="${cat.idCategoria}"
+                th:text="${cat.nombre}">
+        </option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label for="file" class="form-label">Comprobante (max 5MB)</label>
+
+      <div th:if="*{comprobante != null}" class="mb-2">
+        Comprobante actual:
+        <a th:href="@{/comprobantes/{filename}(filename=*{comprobante})}" target="_blank">
+          <i class="bi bi-file-earmark-arrow-down-fill"></i>
+          <span th:text="*{comprobante}"></span>
+        </a>
+      </div>
+
+      <input type="file" class="form-control" id="file" name="file">
+      <div class="form-text">Si sube un nuevo fichero, reemplazará al actual. Si no sube nada, el actual se conservará.</div>
+    </div>
+
+
+
+    <div class="text-center">
+      <button type="submit" class="btn btn-warning btn-sm me-3">Editar</button>
+      <a href="/" class="btn btn-danger btn-sm">Regresar</a>
+    </div>
+
+  </form>
+</div>
+<div th:replace="~{fragmentos/pie-pagina::pie-pagina-seccion}"/>
+</body>
+</html>

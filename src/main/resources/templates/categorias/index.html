@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos/cabecero::cabecero-seccion(titulo='Gestión de Categorías')}"/>
+<body>
+<div th:replace="~{fragmentos/navegacion::navegacion-seccion}"/>
+
+<div class="container">
+  <div class="container text-center" style="margin:30px">
+    <h2> Gestión de Categorías</h2>
+  </div>
+
+  <div class="my-3">
+    <a th:href="@{/categorias/agregar}" class="btn btn-primary">Agregar Nueva Categoría</a>
+  </div>
+
+  <div th:if="${msg_exito != null}" class="alert alert-success" role="alert" th:text="${msg_exito}"></div>
+  <div th:if="${msg_error != null}" class="alert alert-danger" role="alert" th:text="${msg_error}"></div>
+
+  <table class="table table-striped table-hover align-middle table-bordered">
+    <thead class="table-dark text-center">
+    <tr>
+      <th style="width: 10%;">Id</th>
+      <th>Nombre</th>
+      <th style="width: 20%;">Acciones</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="categoria : ${categorias}">
+      <th th:text="${categoria.idCategoria}" scope="row" class="text-center"></th>
+      <td th:text="${categoria.nombre}"></td>
+      <td class="text-center">
+        <a th:href="@{/categorias/editar/{id}(id=${categoria.idCategoria})}" class="btn btn-warning btn-sm me-3"><i class="bi bi-pencil-square"></i> </a>
+        <a th:href="@{/categorias/eliminar/{id}(id=${categoria.idCategoria})}" class="btn btn-danger btn-sm me-3"
+           onclick="return confirm('¿Estás seguro de eliminar esta categoría? (No se podrá eliminar si está en uso)');"><i class="bi bi-trash3"></i> </a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<div th:replace="~{fragmentos/pie-pagina::pie-pagina-seccion}"/>
+</body>
+</html>
