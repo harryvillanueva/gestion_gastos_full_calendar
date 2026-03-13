@@ -4,33 +4,44 @@ import daw.gestiongastos.usuario.domain.Rol;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "usuarios") // Así se llamará la tabla en MySQL
+@Table(name = "usuarios")
 public class UsuarioEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Esto hace que el ID sea Autoincremental
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // unique = true asegura que en la base de datos no haya dos usuarios con el mismo nombre
     @Column(nullable = false, unique = true)
     private String username;
 
     @Column(nullable = false)
     private String password;
 
-    // Guardamos el Enum como un texto (String) en la base de datos (ej: "ADMIN", "BASICO")
+    // Nuevos campos reflejando tu diagrama ER
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    @Column(nullable = false)
+    private String nombre;
+
+    @Column(nullable = false)
+    private String apellidos;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Rol rol;
 
-    // JPA OBLIGA a tener un constructor vacío, aunque no lo usemos nosotros directamente
+    // Constructor vacío exigido por JPA
     public UsuarioEntity() {
     }
 
     // Constructor para mapear desde nuestro objeto de Dominio a esta Entidad
-    public UsuarioEntity(String username, String password, Rol rol) {
+    public UsuarioEntity(String username, String password, String email, String nombre, String apellidos, Rol rol) {
         this.username = username;
         this.password = password;
+        this.email = email;
+        this.nombre = nombre;
+        this.apellidos = apellidos;
         this.rol = rol;
     }
 
@@ -43,6 +54,15 @@ public class UsuarioEntity {
 
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
+
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
+
+    public String getApellidos() { return apellidos; }
+    public void setApellidos(String apellidos) { this.apellidos = apellidos; }
 
     public Rol getRol() { return rol; }
     public void setRol(Rol rol) { this.rol = rol; }

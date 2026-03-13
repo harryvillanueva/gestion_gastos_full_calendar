@@ -1,50 +1,44 @@
-package daw.gestiongastos.usuario.infrastructure;
+package daw.gestiongastos.usuario.infrastructure.controlador;
 
 import daw.gestiongastos.usuario.application.RegistrarUsuarioApp;
-import daw.gestiongastos.usuario.domain.Rol;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import daw.gestiongastos.usuario.domain.Usuario;
+import daw.gestiongastos.usuario.infrastructure.RegistroUsuarioDTO;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
-@RequestMapping("/usuarios")
+@RestController
+@RequestMapping("/api/usuarios")
+@CrossOrigin(origins = "*") // Permite que tu futuro frontend se conecte sin bloqueos
 public class UsuarioControlador {
-    // Inyectamos nuestro Caso de Uso. ¡Fíjate que no inyectamos repositorios aquí!
+
     private final RegistrarUsuarioApp registrarUsuarioApp;
 
+    // Inyectamos nuestro Caso de Uso
     public UsuarioControlador(RegistrarUsuarioApp registrarUsuarioApp) {
         this.registrarUsuarioApp = registrarUsuarioApp;
     }
 
-    // 1. Mostrar el formulario HTML al usuario
-    @GetMapping("/registro")
-    public String mostrarFormularioRegistro() {
-        return "usuarios/registro"; // Esto buscará el archivo templates/usuarios/registro.html
-    }
-
-    // 2. Procesar los datos cuando el usuario envíe el formulario
     @PostMapping("/registro")
-    public String registrarUsuario(
-            @RequestParam String username,
-            @RequestParam String password,
-            Model modelo) {
-
+    public ResponseEntity<?> registrarUsuario(@RequestBody RegistroUsuarioDTO datosEntrada) {
         try {
-            // Ejecutamos nuestro Caso de Uso. Por defecto, le asignamos el rol BASICO.
-            registrarUsuarioApp.ejecutar(username, password, Rol.BASICO);
+            // 1. Extraemos TODOS los datos del DTO y se los pasamos al Director de Orquesta (Caso de Uso)
+            Usuario nuevoUsuario = registrarUsuarioApp.ejecutar(
+                    datosEntrada.getUsername(),
+                    datosEntrada.getPassword(),
+                    datosEntrada.getEmail(),      // Nuevo campo
+                    datosEntrada.getNombre(),     // Nuevo campo
+                    datosEntrada.getApellidos(),  // Nuevo campo
+                    datosEntrada.getRol()
+            );
 
-            // Si todo sale bien, lo mandamos al login o al index con un mensaje de éxito
-            return "redirect:/?exito=Usuario+registrado+correctamente";
+            // 2. Si todo va bien (código 201 Created), devolvemos el usuario creado en formato JSON
+            return ResponseEntity.status(HttpStatus.CREATED).body(nuevoUsuario);
 
         } catch (RuntimeException e) {
-            // Si nuestro Caso de Uso lanza un error (ej. el usuario ya existe o contraseña corta)
-            // Atrapamos el error y volvemos a mostrar el formulario con el mensaje de error
-            modelo.addAttribute("error", e.getMessage());
-            modelo.addAttribute("username", username); // Para que no tenga que volver a escribir el nombre
-            return "usuarios/registro";
+            // 3. Si salta alguna regla de negocio (ej. email sin '@' o usuario duplicado)
+            // devolvemos un código 400 Bad Request con el mensaje de error
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 }
