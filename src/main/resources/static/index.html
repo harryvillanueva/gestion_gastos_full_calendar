@@ -5,30 +5,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Gestión de Gastos</title>
     <link rel="stylesheet" href="css/global.css">
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
 </head>
 <body class="body-dashboard">
 
 <script>
-    if (!localStorage.getItem('jwt_token')) {
-        window.location.href = 'login.html';
-    }
+    if (!localStorage.getItem('jwt_token')) window.location.href = 'login.html';
 </script>
 
 <div class="navbar">
     <h2 style="margin: 0;">Mi Gestión de Gastos 💰</h2>
-    <button onclick="cerrarSesion()" class="btn-danger">Cerrar Sesión</button>
+    <div style="display: flex; align-items: center; gap: 20px;">
+        <h3 id="caja-saldo" style="margin: 0; padding: 5px 15px; border-radius: 5px; background: white;">
+            Saldo: <span id="saldo-actual">0.00</span> €
+        </h3>
+        <button onclick="cerrarSesion()" class="btn-danger">Cerrar Sesión</button>
+    </div>
 </div>
 
 <div class="contenido">
-    <h3>¡Bienvenido!</h3>
-    <p>Tu token JWT está guardado de forma segura. Pronto integraremos el calendario aquí.</p>
-    <p style="word-break: break-all; color: gray; font-size: 12px;">Tu Token: <span id="mostrarToken"></span></p>
+    <div id='calendar'></div>
 </div>
 
-<script src="js/app.js"></script>
-<script>
-    // Imprimir el token solo para verificar que funciona
-    document.getElementById('mostrarToken').innerText = localStorage.getItem('jwt_token');
-</script>
+<div id="modal-movimiento" class="modal-fondo" style="display: none;">
+    <div class="modal-contenido">
+        <h3>Añadir Movimiento</h3>
+        <p>Fecha: <span id="fecha-seleccionada-texto"></span></p>
+
+        <form id="formMovimiento">
+            <input type="hidden" id="fecha-seleccionada-input">
+
+            <input type="text" id="descripcion" placeholder="Descripción (ej. Compra Mercadona)" required>
+            <input type="number" id="importe" step="0.01" min="0.01" placeholder="Importe (ej. 50.30)" required>
+
+            <select id="tipo" required style="width: 100%; padding: 10px; margin: 10px 0;">
+                <option value="GASTO">Gasto (Restar)</option>
+                <option value="INGRESO">Ingreso (Sumar)</option>
+            </select>
+
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <button type="submit" class="btn-success">Guardar Evento</button>
+                <button type="button" class="btn-danger" onclick="cerrarModal()">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/dashboard.js"></script>
 </body>
 </html>

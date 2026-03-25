@@ -28,4 +28,11 @@ public class JwtAdaptador implements ITokenGenerador {
                 .signWith(CLAVE_SECRETA)
                 .compact();
     }
+    public io.jsonwebtoken.Claims obtenerClaims(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(CLAVE_SECRETA)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
 }
