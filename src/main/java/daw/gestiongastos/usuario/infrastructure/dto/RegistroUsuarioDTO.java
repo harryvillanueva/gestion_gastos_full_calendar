@@ -1,4 +1,4 @@
-package daw.gestiongastos.usuario.infrastructure;
+package daw.gestiongastos.usuario.infrastructure.dto;
 
 import daw.gestiongastos.usuario.domain.Rol;
 

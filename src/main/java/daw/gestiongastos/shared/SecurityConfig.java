@@ -15,12 +15,20 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // Deshabilitamos CSRF porque en una API REST que no usa cookies de sesión no es necesario (usaremos tokens más adelante)
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        // Permitimos el paso libre a nuestra ruta de registro
-                        .requestMatchers("/api/usuarios/registro").permitAll()
-                        // Cualquier otra petición requerirá autenticación
+                        // ¡AQUÍ ESTÁ LA MAGIA! Añadimos las rutas de nuestros archivos HTML, CSS y JS
+                        .requestMatchers(
+                                "/api/usuarios/registro",
+                                "/api/usuarios/login",
+                                "/",                  // Permite la raíz
+                                "/index.html",        // Permite la vista principal
+                                "/login.html",        // Permite la vista de login
+                                "/registro.html",     // Permite la vista de registro
+                                "/css/**",            // Permite cualquier archivo dentro de la carpeta css
+                                "/js/**"              // Permite cualquier archivo dentro de la carpeta js
+                        ).permitAll()
+                        // Cualquier otra cosa (como guardar un gasto en el futuro) pedirá Token
                         .anyRequest().authenticated()
                 );
 

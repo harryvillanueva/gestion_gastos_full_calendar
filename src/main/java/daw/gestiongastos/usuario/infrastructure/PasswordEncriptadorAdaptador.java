@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class PasswordEncriptadorAdaptador implements IPasswordEncriptador {
 
-    // Inyectamos la herramienta de Spring
     private final PasswordEncoder passwordEncoder;
 
     public PasswordEncriptadorAdaptador(PasswordEncoder passwordEncoder) {
@@ -16,7 +15,12 @@ public class PasswordEncriptadorAdaptador implements IPasswordEncriptador {
 
     @Override
     public String encriptar(String passwordPlana) {
-        // Usamos BCrypt para generar el hash indescifrable
         return passwordEncoder.encode(passwordPlana);
+    }
+
+    // NUEVO MÉTODO IMPLEMENTADO: Usa Spring Security para comparar
+    @Override
+    public boolean coinciden(String passwordPlana, String passwordEncriptada) {
+        return passwordEncoder.matches(passwordPlana, passwordEncriptada);
     }
 }

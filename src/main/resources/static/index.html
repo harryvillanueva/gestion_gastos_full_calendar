@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Gestión de Gastos</title>
+    <link rel="stylesheet" href="css/global.css">
+</head>
+<body class="body-dashboard">
+
+<script>
+    if (!localStorage.getItem('jwt_token')) {
+        window.location.href = 'login.html';
+    }
+</script>
+
+<div class="navbar">
+    <h2 style="margin: 0;">Mi Gestión de Gastos 💰</h2>
+    <button onclick="cerrarSesion()" class="btn-danger">Cerrar Sesión</button>
+</div>
+
+<div class="contenido">
+    <h3>¡Bienvenido!</h3>
+    <p>Tu token JWT está guardado de forma segura. Pronto integraremos el calendario aquí.</p>
+    <p style="word-break: break-all; color: gray; font-size: 12px;">Tu Token: <span id="mostrarToken"></span></p>
+</div>
+
+<script src="js/app.js"></script>
+<script>
+    // Imprimir el token solo para verificar que funciona
+    document.getElementById('mostrarToken').innerText = localStorage.getItem('jwt_token');
+</script>
+</body>
+</html>
