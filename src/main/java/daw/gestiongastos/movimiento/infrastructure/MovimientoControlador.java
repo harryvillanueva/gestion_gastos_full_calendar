@@ -1,6 +1,8 @@
 package daw.gestiongastos.movimiento.infrastructure;
 
 import daw.gestiongastos.movimiento.application.CrearMovimientoApp;
+import daw.gestiongastos.movimiento.application.EditarMovimientoApp; // NUEVO
+import daw.gestiongastos.movimiento.application.EliminarMovimientoApp; // NUEVO
 import daw.gestiongastos.movimiento.application.ListarMovimientosApp;
 import daw.gestiongastos.movimiento.domain.Movimiento;
 import org.springframework.http.HttpStatus;
@@ -14,34 +16,42 @@ public class MovimientoControlador {
 
     private final CrearMovimientoApp crearMovimientoApp;
     private final ListarMovimientosApp listarMovimientosApp;
+    private final EditarMovimientoApp editarMovimientoApp;     // NUEVO
+    private final EliminarMovimientoApp eliminarMovimientoApp; // NUEVO
 
-    public MovimientoControlador(CrearMovimientoApp crearMovimientoApp, ListarMovimientosApp listarMovimientosApp) {
+    // Inyectamos todos los Casos de Uso en el constructor
+    public MovimientoControlador(CrearMovimientoApp crearMovimientoApp, ListarMovimientosApp listarMovimientosApp,
+                                 EditarMovimientoApp editarMovimientoApp, EliminarMovimientoApp eliminarMovimientoApp) {
         this.crearMovimientoApp = crearMovimientoApp;
         this.listarMovimientosApp = listarMovimientosApp;
+        this.editarMovimientoApp = editarMovimientoApp;
+        this.eliminarMovimientoApp = eliminarMovimientoApp;
     }
 
-    @GetMapping
-    public ResponseEntity<?> listar(@RequestAttribute("usuarioId") Long usuarioId) {
-        return ResponseEntity.ok(listarMovimientosApp.ejecutar(usuarioId));
-    }
+    // ... (Tus métodos @PostMapping y @GetMapping siguen igual aquí) ...
 
-    @PostMapping
-    public ResponseEntity<?> crear(
-            @RequestBody CrearMovimientoDTO dto,
-            // ¡FÍJATE AQUÍ! Sacamos el ID que nuestro JwtFiltro dejó guardado en la petición
+    // NUEVO ENDPOINT PARA EDITAR
+    @PutMapping("/{id}")
+    public ResponseEntity<?> editar(
+            @PathVariable Long id,
+            @RequestBody CrearMovimientoDTO dto, // Reciclamos el DTO porque tiene los mismos campos
             @RequestAttribute("usuarioId") Long usuarioId) {
-
         try {
-            Movimiento guardado = crearMovimientoApp.ejecutar(
-                    dto.getDescripcion(),
-                    dto.getImporte(),
-                    dto.getTipo(),
-                    dto.getFecha(),
-                    usuarioId // ¡Le pasamos el ID seguro y comprobado!
-            );
-            return ResponseEntity.status(HttpStatus.CREATED).body(guardado);
-        } catch (IllegalArgumentException e) {
+            Movimiento editado = editarMovimientoApp.ejecutar(id, dto.getDescripcion(), dto.getImporte(), dto.getTipo(), usuarioId);
+            return ResponseEntity.ok(editado);
+        } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    // NUEVO ENDPOINT PARA BORRAR
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> eliminar(@PathVariable Long id) {
+        try {
+            eliminarMovimientoApp.ejecutar(id);
+            return ResponseEntity.ok("Movimiento eliminado correctamente");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error al eliminar");
         }
     }
 }
