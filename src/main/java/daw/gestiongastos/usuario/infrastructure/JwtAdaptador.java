@@ -14,12 +14,11 @@ import java.util.Date;
 @Component
 public class JwtAdaptador implements ITokenGenerador {
 
-    // 🚀 LA SOLUCIÓN: Usamos una clave de texto fija y muy larga.
-    // Así los tokens sobrevivirán a todos los reinicios de tu servidor.
+
     private static final String CLAVE_SECRETA_TEXTO = "EstaEsUnaClaveSecretaMuyLargaYSuperSeguraParaNuestroProyectoDeGestionDeGastos12345";
     private static final Key CLAVE_SECRETA = Keys.hmacShaKeyFor(CLAVE_SECRETA_TEXTO.getBytes());
 
-    private static final long TIEMPO_EXPIRACION = 86400000; // 1 día en milisegundos
+    private static final long TIEMPO_EXPIRACION = 86400000;
 
     @Override
     public String generarToken(Usuario usuario) {

@@ -15,12 +15,10 @@ public class NotificacionApp {
 
     public NotificacionApp(NotificacionJpaRepository repo) { this.repo = repo; }
 
-    // Método interno para crear notificaciones desde otros módulos
     public void crear(Long usuarioId, String mensaje) {
         repo.save(new NotificacionEntity(usuarioId, mensaje));
     }
 
-    // Endpoint para que el frontend pida las notificaciones
     @GetMapping
     public ResponseEntity<List<NotificacionEntity>> listar(@RequestAttribute("usuarioId") Long usuarioId) {
         return ResponseEntity.ok(repo.findByUsuarioIdOrderByFechaDesc(usuarioId));

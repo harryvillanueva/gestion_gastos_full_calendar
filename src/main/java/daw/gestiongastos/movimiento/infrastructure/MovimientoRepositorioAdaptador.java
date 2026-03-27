@@ -23,7 +23,7 @@ public class MovimientoRepositorioAdaptador implements IMovimientoRepositorio {
                 movimiento.getDescripcion(), movimiento.getImporte(),
                 movimiento.getTipo(), movimiento.getFecha(), movimiento.getUsuarioId()
         );
-        if (movimiento.getId() != null) { entity.setId(movimiento.getId()); } // Por si estamos editando
+        if (movimiento.getId() != null) { entity.setId(movimiento.getId()); }
 
         MovimientoEntity guardado = jpaRepository.save(entity);
 
@@ -47,7 +47,7 @@ public class MovimientoRepositorioAdaptador implements IMovimientoRepositorio {
         jpaRepository.deleteById(id);
     }
 
-    // Método auxiliar para no repetir código
+
     private Movimiento mapearADominio(MovimientoEntity entity) {
         return new Movimiento(entity.getId(), entity.getDescripcion(), entity.getImporte(),
                 entity.getTipo(), entity.getFecha(), entity.getUsuarioId());

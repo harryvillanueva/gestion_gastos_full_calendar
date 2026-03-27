@@ -10,7 +10,7 @@ public class NotificacionEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long usuarioId; // A quién va dirigida
+    private Long usuarioId;
     private String mensaje;
     private LocalDateTime fecha;
 

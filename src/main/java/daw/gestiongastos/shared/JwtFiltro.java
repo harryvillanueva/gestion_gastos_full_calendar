@@ -27,7 +27,6 @@ public class JwtFiltro extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
 
-        // 1. Buscamos la cabecera "Authorization"
         String header = request.getHeader("Authorization");
 
         if (header != null && header.startsWith("Bearer ")) {
@@ -39,21 +38,17 @@ public class JwtFiltro extends OncePerRequestFilter {
                         claims.getSubject(), null, Collections.emptyList());
                 SecurityContextHolder.getContext().setAuthentication(auth);
 
-                // Sacamos el ID
                 Number idNumber = (Number) claims.get("id");
                 request.setAttribute("usuarioId", idNumber.longValue());
 
-                // 🚀 ¡NUEVO! Sacamos el Rol para que los controladores sepan si eres ADMIN
                 request.setAttribute("rol", claims.get("rol", String.class));
 
             } catch (Exception e) {
-                // Si vuelve a fallar por lo que sea, ahora sí imprimiremos el error en tu consola para verlo
                 System.out.println("Error procesando el token: " + e.getMessage());
                 SecurityContextHolder.clearContext();
             }
         }
 
-        // Continuamos con el viaje de la petición
         chain.doFilter(request, response);
     }
 }

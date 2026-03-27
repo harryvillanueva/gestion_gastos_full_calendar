@@ -16,18 +16,18 @@ public class MovimientoEntity {
     @Column(nullable = false)
     private String descripcion;
 
-    @Column(nullable = false, precision = 10, scale = 2) // Guardamos el dinero de forma exacta
+    @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal importe;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private TipoMovimiento tipo; // GASTO o INGRESO
+    private TipoMovimiento tipo;
 
     @Column(nullable = false)
     private LocalDate fecha;
 
     @Column(name = "usuario_id", nullable = false)
-    private Long usuarioId; // La clave foránea manual que vincula este gasto al usuario
+    private Long usuarioId;
 
     public MovimientoEntity() {}
 
@@ -39,7 +39,7 @@ public class MovimientoEntity {
         this.usuarioId = usuarioId;
     }
 
-    // Genera los Getters y Setters de todos los campos...
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getDescripcion() { return descripcion; }

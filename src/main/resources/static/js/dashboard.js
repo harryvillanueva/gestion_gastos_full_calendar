@@ -1,8 +1,8 @@
-// js/dashboard.js
+
 
 const API_MOVIMIENTOS = `${API_BASE_URL}/movimientos`;
 const API_USUARIOS = `${API_BASE_URL}/usuarios`;
-const API_NOTIFICACIONES = `${API_BASE_URL}/notificaciones`;
+
 let calendar;
 let usuarioActual = obtenerDatosUsuario();
 
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     document.getElementById('btn-eliminar').addEventListener('click', eliminarMovimiento);
 });
 
-// --- FUNCIONES DE CARGA ---
+
 
 async function cargarDatos(token) {
     try {
@@ -73,7 +73,7 @@ async function cargarDatos(token) {
     } catch (error) { console.error("Error al cargar datos:", error); }
 }
 
-// 🚀 NUEVO: Trae los usuarios si eres ADMIN
+
 async function cargarUsuariosParaAdmin(token) {
     try {
         const respuesta = await fetch(`${API_USUARIOS}/todos`, {
@@ -108,7 +108,7 @@ function actualizarSaldoUI(saldo) {
     else spanSaldo.classList.add('saldo-negativo');
 }
 
-// --- LÓGICA DEL MODAL DINÁMICO ---
+
 
 function abrirModal(fechaStr, eventoExistente) {
     document.getElementById('fecha-seleccionada-texto').innerText = fechaStr;
@@ -166,7 +166,7 @@ function cerrarModal() {
     document.getElementById('formMovimiento').reset();
 }
 
-// --- PETICIONES CRUD ---
+
 
 async function guardarMovimiento() {
     // 🚀 Capturamos a quién se lo asigna (si el campo está vacío, será null y se lo asigna a sí mismo)
@@ -227,68 +227,90 @@ async function eliminarMovimiento() {
         await cargarDatos(getToken());
     } else { alert("Error al eliminar"); }
 
-    // --- TRANSFERENCIAS ---
-    function abrirModalTransferencia() {
-        document.getElementById('modal-transferencia').style.display = 'flex';
-        cargarUsuariosParaTransferencia();
-    }
 
-    function cerrarModalTransferencia() {
-        document.getElementById('modal-transferencia').style.display = 'none';
-        document.getElementById('formTransferencia').reset();
-    }
+}
 
-    async function cargarUsuariosParaTransferencia() {
-        const respuesta = await fetch(`${API_USUARIOS}/todos`, { headers: { 'Authorization': `Bearer ${getToken()}` } });
-        if (respuesta.ok) {
-            const usuarios = await respuesta.json();
-            const select = document.getElementById('transf-destino');
-            select.innerHTML = ''; // Limpiar
-            usuarios.forEach(usr => {
-                if (usr.id !== usuarioActual.id) {
-                    select.innerHTML += `<option value="${usr.id}">${usr.username} (${usr.nombre})</option>`;
-                }
-            });
-        }
-    }
 
-    document.getElementById('formTransferencia').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const datos = {
-            usuarioIdDestino: parseInt(document.getElementById('transf-destino').value),
-            importe: parseFloat(document.getElementById('transf-importe').value)
-        };
-        const respuesta = await fetch(`${API_MOVIMIENTOS}/transferir`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getToken()}` },
-            body: JSON.stringify(datos)
+
+const API_NOTIFICACIONES = `${API_BASE_URL}/notificaciones`;
+
+
+window.abrirModalTransferencia = function() {
+    document.getElementById('modal-transferencia').style.display = 'flex';
+    cargarUsuariosParaTransferencia();
+}
+
+window.cerrarModalTransferencia = function() {
+    document.getElementById('modal-transferencia').style.display = 'none';
+    const form = document.getElementById('formTransferencia');
+    if(form) form.reset();
+}
+
+async function cargarUsuariosParaTransferencia() {
+    const respuesta = await fetch(`${API_USUARIOS}/todos`, { headers: { 'Authorization': `Bearer ${getToken()}` } });
+    if (respuesta.ok) {
+        const usuarios = await respuesta.json();
+        const select = document.getElementById('transf-destino');
+        select.innerHTML = '';
+        usuarios.forEach(usr => {
+            if (usr.id !== usuarioActual.id) {
+                select.innerHTML += `<option value="${usr.id}">${usr.username} (${usr.nombre})</option>`;
+            }
         });
-        if (respuesta.ok) {
-            cerrarModalTransferencia();
-            await cargarDatos(getToken()); // Recargar saldo y calendario
-        } else {
-            alert("Error en la transferencia");
-        }
-    });
+    }
+}
 
-    // --- NOTIFICACIONES ---
-    // Llama a esta función dentro del DOMContentLoaded (donde cargas los datos del calendario)
-    async function cargarNotificaciones() {
+
+document.addEventListener('DOMContentLoaded', () => {
+    const formTransferencia = document.getElementById('formTransferencia');
+    if (formTransferencia) {
+        formTransferencia.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const datos = {
+                usuarioIdDestino: parseInt(document.getElementById('transf-destino').value),
+                importe: parseFloat(document.getElementById('transf-importe').value)
+            };
+            const respuesta = await fetch(`${API_MOVIMIENTOS}/transferir`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getToken()}` },
+                body: JSON.stringify(datos)
+            });
+            if (respuesta.ok) {
+                cerrarModalTransferencia();
+                await cargarDatos(getToken());
+                alert("¡Transferencia realizada con éxito!");
+            } else {
+                alert("Error en la transferencia");
+            }
+        });
+    }
+
+
+    if (usuarioActual) {
+        cargarNotificaciones();
+    }
+});
+
+
+async function cargarNotificaciones() {
+    try {
         const respuesta = await fetch(API_NOTIFICACIONES, { headers: { 'Authorization': `Bearer ${getToken()}` } });
         if (respuesta.ok) {
             const notifs = await respuesta.json();
             const lista = document.getElementById('lista-notificaciones');
-            lista.innerHTML = '';
-            if (notifs.length === 0) {
-                lista.innerHTML = '<li style="padding: 10px;">No tienes notificaciones.</li>';
-            } else {
-                notifs.forEach(n => {
-                    const fecha = new Date(n.fecha).toLocaleString();
-                    lista.innerHTML += `<li style="padding: 10px; border-bottom: 1px solid #ddd;">
-                        <strong>[${fecha}]</strong>: ${n.mensaje}
-                    </li>`;
-                });
+            if(lista) {
+                lista.innerHTML = '';
+                if (notifs.length === 0) {
+                    lista.innerHTML = '<li style="padding: 10px;">No tienes notificaciones.</li>';
+                } else {
+                    notifs.forEach(n => {
+                        const fecha = new Date(n.fecha).toLocaleDateString();
+                        lista.innerHTML += `<li style="padding: 10px; border-bottom: 1px solid #ddd; background: white;">
+                            <strong style="color: #dc3545;">[${fecha}]</strong>: ${n.mensaje}
+                        </li>`;
+                    });
+                }
             }
         }
-    }
+    } catch (e) { console.error("Error cargando notificaciones", e); }
 }

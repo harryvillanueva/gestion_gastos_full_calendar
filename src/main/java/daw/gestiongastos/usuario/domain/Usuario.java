@@ -9,7 +9,7 @@ public class Usuario {
     private String apellidos;
     private Rol rol;
 
-    // Constructor para registrar un nuevo usuario (sin ID)
+
     public Usuario(String username, String password, String email, String nombre, String apellidos, Rol rol) {
         if (username == null || username.trim().isEmpty()) {
             throw new IllegalArgumentException("El nombre de usuario no puede estar vacío");
@@ -26,10 +26,10 @@ public class Usuario {
         this.email = email;
         this.nombre = nombre;
         this.apellidos = apellidos;
-        this.rol = rol != null ? rol : Rol.BASICO; // Por defecto es básico
+        this.rol = rol != null ? rol : Rol.BASICO;
     }
 
-    // Constructor para recuperar de la base de datos (con ID)
+
     public Usuario(Long id, String username, String password, String email, String nombre, String apellidos, Rol rol) {
         this.id = id;
         this.username = username;
@@ -40,7 +40,7 @@ public class Usuario {
         this.rol = rol;
     }
 
-    // Getters
+
     public Long getId() { return id; }
     public String getUsername() { return username; }
     public String getPassword() { return password; }

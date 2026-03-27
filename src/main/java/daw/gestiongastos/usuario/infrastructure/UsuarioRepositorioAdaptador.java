@@ -18,7 +18,7 @@ public class UsuarioRepositorioAdaptador implements IUsuarioRepositorio {
 
     @Override
     public Usuario guardar(Usuario usuario) {
-        // 1. Traducimos del Dominio a la Entidad de BD (ahora con más campos)
+
         UsuarioEntity entity = new UsuarioEntity(
                 usuario.getUsername(),
                 usuario.getPassword(),
@@ -28,10 +28,10 @@ public class UsuarioRepositorioAdaptador implements IUsuarioRepositorio {
                 usuario.getRol()
         );
 
-        // 2. Guardamos en la BD usando Spring
+
         UsuarioEntity entityGuardado = jpaRepository.save(entity);
 
-        // 3. Traducimos la respuesta de la BD de vuelta a nuestro Dominio
+
         return new Usuario(
                 entityGuardado.getId(),
                 entityGuardado.getUsername(),

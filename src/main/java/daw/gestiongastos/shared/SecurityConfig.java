@@ -29,16 +29,15 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // 1. Configuración CORS y desactivación de CSRF (esencial para APIs REST con JWT)
+
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
 
-                // 2. Reglas de Autorización
+
                 .authorizeHttpRequests(auth -> auth
-                        // Permitimos explícitamente las peticiones OPTIONS (CORS preflight)
+
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                        // Rutas públicas (HTML, CSS, JS)
                         .requestMatchers(
                                 "/",
                                 "/*.html",
@@ -48,23 +47,18 @@ public class SecurityConfig {
                                 "/assets/**"
                         ).permitAll()
 
-                        // Endpoints de registro y login son públicos
                         .requestMatchers("/api/usuarios/registro", "/api/usuarios/login").permitAll()
 
-                        // ¡CUALQUIER otra petición debe estar autenticada!
                         .anyRequest().permitAll()
                 )
 
-                // 3. Configuración CLAVE para JWT: Le decimos a Spring que no guarde sesiones.
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-                // 4. Inyectamos nuestro filtro personalizado ANTES del filtro estándar de Spring
                 .addFilterBefore(jwtFiltro, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
-    // Configuración global de CORS para permitir todos los métodos desde cualquier origen (localhost)
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();

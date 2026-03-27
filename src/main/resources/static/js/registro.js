@@ -1,4 +1,4 @@
-// js/registro.js
+
 
 document.addEventListener('DOMContentLoaded', () => {
     const formRegistro = document.getElementById('formRegistro');
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
             };
 
             try {
-                // Usamos la constante que definimos en api.js
+
                 const respuesta = await fetch(`${API_BASE_URL}/usuarios/registro`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },

@@ -1,4 +1,4 @@
-// js/login.js
+
 
 document.addEventListener('DOMContentLoaded', () => {
     const formLogin = document.getElementById('formLogin');

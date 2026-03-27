@@ -8,12 +8,12 @@ public class CrearMovimientoDTO {
     private String descripcion;
     private BigDecimal importe;
     private TipoMovimiento tipo;
-    private LocalDate fecha; // Puede ser null, nuestro Dominio pondrá la fecha de hoy por defecto
+    private LocalDate fecha;
     private Long usuarioIdDestino;
 
     public CrearMovimientoDTO() {}
 
-    // Getters y Setters
+
     public String getDescripcion() { return descripcion; }
     public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
     public BigDecimal getImporte() { return importe; }

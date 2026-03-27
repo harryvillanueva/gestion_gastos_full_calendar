@@ -18,7 +18,6 @@ public class PasswordEncriptadorAdaptador implements IPasswordEncriptador {
         return passwordEncoder.encode(passwordPlana);
     }
 
-    // NUEVO MÉTODO IMPLEMENTADO: Usa Spring Security para comparar
     @Override
     public boolean coinciden(String passwordPlana, String passwordEncriptada) {
         return passwordEncoder.matches(passwordPlana, passwordEncriptada);

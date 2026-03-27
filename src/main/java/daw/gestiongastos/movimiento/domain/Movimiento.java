@@ -9,9 +9,8 @@ public class Movimiento {
     private BigDecimal importe;
     private TipoMovimiento tipo;
     private LocalDate fecha;
-    private Long usuarioId; // Fundamental para saber de quién es este dinero
+    private Long usuarioId;
 
-    // Constructor 1: Para cuando el usuario crea un movimiento nuevo desde la Web (Aún no tiene ID)
     public Movimiento(String descripcion, BigDecimal importe, TipoMovimiento tipo, LocalDate fecha, Long usuarioId) {
         if (importe == null || importe.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("El importe debe ser mayor a cero.");
@@ -26,12 +25,11 @@ public class Movimiento {
         this.descripcion = descripcion;
         this.importe = importe;
         this.tipo = tipo;
-        // Si no nos mandan fecha desde el calendario, asumimos que es hoy
         this.fecha = fecha != null ? fecha : LocalDate.now();
         this.usuarioId = usuarioId;
     }
 
-    // Constructor 2: Para cuando recuperamos el movimiento de la Base de Datos (Ya tiene ID)
+
     public Movimiento(Long id, String descripcion, BigDecimal importe, TipoMovimiento tipo, LocalDate fecha, Long usuarioId) {
         this.id = id;
         this.descripcion = descripcion;
@@ -41,7 +39,6 @@ public class Movimiento {
         this.usuarioId = usuarioId;
     }
 
-    // Getters
     public Long getId() { return id; }
     public String getDescripcion() { return descripcion; }
     public BigDecimal getImporte() { return importe; }

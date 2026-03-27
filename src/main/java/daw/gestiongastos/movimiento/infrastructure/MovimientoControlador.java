@@ -30,9 +30,8 @@ public class MovimientoControlador {
     public ResponseEntity<?> crear(
             @RequestBody CrearMovimientoDTO dto,
             @RequestAttribute("usuarioId") Long usuarioId,
-            @RequestAttribute("rol") String rol) { // Recibimos el rol
+            @RequestAttribute("rol") String rol) {
         try {
-            // 🚀 Si es ADMIN y mandó un usuario destino, usamos ese ID. Si no, usamos el ID del token.
             Long idFinal = ("ADMIN".equals(rol) && dto.getUsuarioIdDestino() != null) ? dto.getUsuarioIdDestino() : usuarioId;
 
             Movimiento guardado = crearMovimientoApp.ejecutar(
@@ -48,7 +47,6 @@ public class MovimientoControlador {
     public ResponseEntity<?> listar(
             @RequestAttribute("usuarioId") Long usuarioId,
             @RequestAttribute("rol") String rol) {
-        // 🚀 Le pasamos el rol al caso de uso para que traiga todos si es Admin
         return ResponseEntity.ok(listarMovimientosApp.ejecutar(usuarioId, rol));
     }
 
@@ -59,7 +57,6 @@ public class MovimientoControlador {
             @RequestAttribute("usuarioId") Long usuarioId,
             @RequestAttribute("rol") String rol) {
         try {
-            // 🚀 Le pasamos el rol al caso de uso
             Movimiento editado = editarMovimientoApp.ejecutar(id, dto.getDescripcion(), dto.getImporte(), dto.getTipo(), usuarioId, rol);
             return ResponseEntity.ok(editado);
         } catch (RuntimeException e) {
@@ -70,13 +67,13 @@ public class MovimientoControlador {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminar(
             @PathVariable Long id,
-            @RequestAttribute("usuarioId") Long usuarioId,
+            @RequestAttribute("usuarioId") Long usuarioIdPeticion,
             @RequestAttribute("rol") String rol) {
         try {
-            // Le pasamos los 3 parámetros al Caso de Uso
-            eliminarMovimientoApp.ejecutar(id, usuarioId, rol);
+            eliminarMovimientoApp.ejecutar(id, usuarioIdPeticion, rol);
             return ResponseEntity.ok("Movimiento eliminado correctamente");
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().body("Error al eliminar");
         }
     }

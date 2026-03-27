@@ -17,7 +17,6 @@ public class UsuarioEntity {
     @Column(nullable = false)
     private String password;
 
-    // Nuevos campos reflejando tu diagrama ER
     @Column(nullable = false, unique = true)
     private String email;
 
@@ -31,11 +30,9 @@ public class UsuarioEntity {
     @Column(nullable = false)
     private Rol rol;
 
-    // Constructor vacío exigido por JPA
     public UsuarioEntity() {
     }
 
-    // Constructor para mapear desde nuestro objeto de Dominio a esta Entidad
     public UsuarioEntity(String username, String password, String email, String nombre, String apellidos, Rol rol) {
         this.username = username;
         this.password = password;
@@ -45,7 +42,7 @@ public class UsuarioEntity {
         this.rol = rol;
     }
 
-    // Getters y Setters
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

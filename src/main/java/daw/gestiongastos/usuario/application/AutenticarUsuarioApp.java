@@ -20,16 +20,13 @@ public class AutenticarUsuarioApp {
     }
 
     public String ejecutar(String username, String password) {
-        // 1. Buscar al usuario en la base de datos
         Usuario usuario = usuarioRepositorio.buscarPorUsername(username)
                 .orElseThrow(() -> new RuntimeException("Credenciales incorrectas"));
 
-        // 2. Verificar que la contraseña coincida
         if (!encriptador.coinciden(password, usuario.getPassword())) {
             throw new RuntimeException("Credenciales incorrectas");
         }
 
-        // 3. Generar y devolver el Token
         return tokenGenerador.generarToken(usuario);
     }
 }

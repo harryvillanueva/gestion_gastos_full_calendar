@@ -6,6 +6,5 @@ import java.util.List;
 
 @Repository
 public interface MovimientoJpaRepository extends JpaRepository<MovimientoEntity, Long> {
-    // Magia de Spring: Busca todos los movimientos de un usuario específico
     List<MovimientoEntity> findByUsuarioId(Long usuarioId);
 }

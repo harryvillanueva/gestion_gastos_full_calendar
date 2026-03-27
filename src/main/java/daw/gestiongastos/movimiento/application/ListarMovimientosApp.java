@@ -11,7 +11,6 @@ public class ListarMovimientosApp {
 
     public ListarMovimientosApp(IMovimientoRepositorio repositorio) { this.repositorio = repositorio; }
 
-    // 🚀 ACTUALIZADO: Recibe el rol. Si es ADMIN, trae todo.
     public List<Movimiento> ejecutar(Long usuarioId, String rol) {
         if ("ADMIN".equals(rol)) {
             return repositorio.buscarTodos();

@@ -8,10 +8,8 @@ import java.util.Optional;
 @Repository
 public interface UsuarioRepository extends JpaRepository<UsuarioEntity, Long> {
 
-    // Con solo escribir este nombre, Spring Boot crea automáticamente la consulta SQL:
-    // SELECT * FROM usuarios WHERE username = ?
+
     Optional<UsuarioEntity> findByUsername(String username);
 
-    // Y este nos servirá para saber si un nombre ya está en uso al registrarse
     boolean existsByUsername(String username);
 }

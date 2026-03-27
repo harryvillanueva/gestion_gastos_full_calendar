@@ -18,7 +18,7 @@ public class TransferirFondosApp {
         this.usuRepo = usuRepo;
     }
 
-    @Transactional // ¡Asegura que se guarden los dos o ninguno!
+    @Transactional
     public void ejecutar(Long idOrigen, Long idDestino, BigDecimal importe) {
         if (importe.compareTo(BigDecimal.ZERO) <= 0) throw new RuntimeException("Importe inválido");
 

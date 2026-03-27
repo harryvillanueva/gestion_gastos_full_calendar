@@ -6,14 +6,14 @@ public class RegistroUsuarioDTO {
 
     private String username;
     private String password;
-    private String email;     // Añadido
-    private String nombre;    // Añadido
-    private String apellidos; // Añadido
+    private String email;
+    private String nombre;
+    private String apellidos;
     private Rol rol;
 
     public RegistroUsuarioDTO() {}
 
-    // Getters y Setters
+
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
 

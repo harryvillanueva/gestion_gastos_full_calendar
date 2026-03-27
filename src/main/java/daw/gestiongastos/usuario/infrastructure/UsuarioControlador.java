@@ -19,7 +19,7 @@ public class UsuarioControlador {
 
     private final RegistrarUsuarioApp registrarUsuarioApp;
     private final AutenticarUsuarioApp autenticarUsuarioApp;
-    private final IUsuarioRepositorio usuarioRepositorio; // Inyectamos el repo
+    private final IUsuarioRepositorio usuarioRepositorio;
 
     public UsuarioControlador(RegistrarUsuarioApp registrarUsuarioApp, AutenticarUsuarioApp autenticarUsuarioApp, IUsuarioRepositorio usuarioRepositorio) {
         this.registrarUsuarioApp = registrarUsuarioApp;
@@ -49,18 +49,8 @@ public class UsuarioControlador {
         }
     }
 
-    // 🚀 NUEVO ENDPOINT: Exclusivo para que el ADMIN vea a quién asignarle gastos
-    @GetMapping("/todos")
-    public ResponseEntity<?> obtenerTodosLosUsuarios(@RequestAttribute("rol") String rol) {
-        if (!"ADMIN".equals(rol)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("No tienes permisos para ver esto");
-        }
-        return ResponseEntity.ok(usuarioRepositorio.buscarTodos());
-    }
-
     @GetMapping("/todos")
     public ResponseEntity<?> obtenerTodosLosUsuarios() {
-        // Ahora todos pueden ver la lista para poder hacer transferencias
         return ResponseEntity.ok(usuarioRepositorio.buscarTodos());
     }
 }
