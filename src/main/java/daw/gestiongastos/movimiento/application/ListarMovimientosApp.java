@@ -9,8 +9,14 @@ import java.util.List;
 public class ListarMovimientosApp {
     private final IMovimientoRepositorio repositorio;
 
-    public ListarMovimientosApp(IMovimientoRepositorio repositorio) {
-        this.repositorio = repositorio;
+    public ListarMovimientosApp(IMovimientoRepositorio repositorio) { this.repositorio = repositorio; }
+
+    // 🚀 ACTUALIZADO: Recibe el rol. Si es ADMIN, trae todo.
+    public List<Movimiento> ejecutar(Long usuarioId, String rol) {
+        if ("ADMIN".equals(rol)) {
+            return repositorio.buscarTodos();
+        }
+        return repositorio.buscarPorUsuarioId(usuarioId);
     }
 
     public List<Movimiento> ejecutar(Long usuarioId) {

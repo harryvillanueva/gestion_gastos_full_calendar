@@ -9,6 +9,7 @@ public class CrearMovimientoDTO {
     private BigDecimal importe;
     private TipoMovimiento tipo;
     private LocalDate fecha; // Puede ser null, nuestro Dominio pondrá la fecha de hoy por defecto
+    private Long usuarioIdDestino;
 
     public CrearMovimientoDTO() {}
 
@@ -21,4 +22,7 @@ public class CrearMovimientoDTO {
     public void setTipo(TipoMovimiento tipo) { this.tipo = tipo; }
     public LocalDate getFecha() { return fecha; }
     public void setFecha(LocalDate fecha) { this.fecha = fecha; }
+    public Long getUsuarioIdDestino() { return usuarioIdDestino; }
+    public void setUsuarioIdDestino(Long usuarioIdDestino) { this.usuarioIdDestino = usuarioIdDestino; }
+
 }

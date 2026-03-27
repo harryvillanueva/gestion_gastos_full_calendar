@@ -13,11 +13,11 @@
 </script>
 
 <div class="navbar">
-    <h2 style="margin: 0;">Mi Gestión de Gastos 💰 <span id="etiqueta-rol" style="font-size: 14px; background: #007bff; padding: 3px 8px; border-radius: 5px;"></span></h2>
+    <h2 style="margin: 0;">Mi Gestión de Gastos 💰 <span id="etiqueta-rol" ...></span></h2>
     <div style="display: flex; align-items: center; gap: 20px;">
-        <h3 id="caja-saldo" style="margin: 0; padding: 5px 15px; border-radius: 5px; background: white; color: black;">
-            Saldo: <span id="saldo-actual">0.00</span> €
-        </h3>
+        <button onclick="abrirModalTransferencia()" class="btn-primary">💸 Transferir</button>
+
+        <h3 id="caja-saldo"...> Saldo: <span id="saldo-actual">0.00</span> € </h3>
         <button onclick="cerrarSesion()" class="btn-danger">Cerrar Sesión</button>
     </div>
 </div>
@@ -43,7 +43,9 @@
 
         <form id="formMovimiento">
             <input type="hidden" id="fecha-seleccionada-input">
-            <input type="hidden" id="id-movimiento-input"> <input type="text" id="descripcion" placeholder="Descripción" required>
+            <input type="hidden" id="id-movimiento-input">
+
+            <input type="text" id="descripcion" placeholder="Descripción" required>
             <input type="number" id="importe" step="0.01" min="0.01" placeholder="Importe" required>
 
             <select id="tipo" required style="width: 100%; padding: 10px; margin: 10px 0;">
@@ -51,12 +53,31 @@
                 <option value="INGRESO">Ingreso (Sumar)</option>
             </select>
 
+            <div id="contenedor-asignar-usuario" style="display: none; margin-bottom: 15px;">
+                <label for="usuarioDestino" style="font-size: 14px; font-weight: bold; color: #555;">Asignar a un usuario:</label>
+                <select id="usuarioDestino" style="width: 100%; padding: 10px; margin-top: 5px;">
+                    <option value="">A mí mismo (Por defecto)</option>
+                </select>
+            </div>
+
             <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px;">
                 <button type="submit" id="btn-guardar" class="btn-success">Guardar Evento</button>
                 <button type="button" id="btn-actualizar" class="btn-primary" style="display: none;">Actualizar</button>
                 <button type="button" id="btn-eliminar" class="btn-danger" style="display: none;">Eliminar</button>
-
                 <button type="button" class="btn-secondary" style="background: #6c757d;" onclick="cerrarModal()">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div id="modal-transferencia" class="modal-fondo" style="display: none;">
+    <div class="modal-contenido">
+        <h3>Transferir Fondos</h3>
+        <form id="formTransferencia">
+            <select id="transf-destino" required style="width: 100%; padding: 10px; margin: 10px 0;"></select>
+            <input type="number" id="transf-importe" step="0.01" min="0.01" placeholder="Importe" required>
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <button type="submit" class="btn-primary">Enviar</button>
+                <button type="button" class="btn-secondary" onclick="cerrarModalTransferencia()">Cancelar</button>
             </div>
         </form>
     </div>

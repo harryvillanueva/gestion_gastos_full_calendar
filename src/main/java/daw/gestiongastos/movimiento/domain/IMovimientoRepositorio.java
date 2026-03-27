@@ -8,4 +8,5 @@ public interface IMovimientoRepositorio {
     List<Movimiento> buscarPorUsuarioId(Long usuarioId);
     Optional<Movimiento> buscarPorId(Long id);
     void eliminar(Long id);
+    List<Movimiento> buscarTodos();
 }

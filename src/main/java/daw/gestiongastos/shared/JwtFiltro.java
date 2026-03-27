@@ -32,23 +32,19 @@ public class JwtFiltro extends OncePerRequestFilter {
 
         if (header != null && header.startsWith("Bearer ")) {
             try {
-                // 2. Quitamos la palabra "Bearer " para quedarnos solo con el token
                 String token = header.substring(7);
-
-                // 3. Extraemos los datos
                 Claims claims = jwtAdaptador.obtenerClaims(token);
 
-                // 🚀 CORRECCIÓN 1: En lugar de 'null', le pasamos una lista vacía con Collections.emptyList()
                 UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
-                        claims.getSubject(),
-                        null,
-                        Collections.emptyList()
-                );
+                        claims.getSubject(), null, Collections.emptyList());
                 SecurityContextHolder.getContext().setAuthentication(auth);
 
-                // 🚀 CORRECCIÓN 2: Extraemos el número de forma segura, sea Integer o Long, y lo convertimos a Long.
+                // Sacamos el ID
                 Number idNumber = (Number) claims.get("id");
                 request.setAttribute("usuarioId", idNumber.longValue());
+
+                // 🚀 ¡NUEVO! Sacamos el Rol para que los controladores sepan si eres ADMIN
+                request.setAttribute("rol", claims.get("rol", String.class));
 
             } catch (Exception e) {
                 // Si vuelve a fallar por lo que sea, ahora sí imprimiremos el error en tu consola para verlo

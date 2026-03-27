@@ -52,4 +52,11 @@ public class MovimientoRepositorioAdaptador implements IMovimientoRepositorio {
         return new Movimiento(entity.getId(), entity.getDescripcion(), entity.getImporte(),
                 entity.getTipo(), entity.getFecha(), entity.getUsuarioId());
     }
+
+    @Override
+    public List<Movimiento> buscarTodos() {
+        return jpaRepository.findAll().stream()
+                .map(this::mapearADominio)
+                .collect(Collectors.toList());
+    }
 }

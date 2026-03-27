@@ -4,6 +4,7 @@ import daw.gestiongastos.usuario.domain.IUsuarioRepositorio;
 import daw.gestiongastos.usuario.domain.Usuario;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -59,5 +60,21 @@ public class UsuarioRepositorioAdaptador implements IUsuarioRepositorio {
     @Override
     public boolean existeUsername(String username) {
         return jpaRepository.existsByUsername(username);
+    }
+
+    @Override
+    public List<Usuario> buscarTodos() {
+        return jpaRepository.findAll().stream()
+                .map(entity -> new Usuario(
+                        entity.getId(), entity.getNombre(), entity.getApellidos(),
+                        entity.getEmail(), entity.getUsername(), entity.getPassword(), entity.getRol()))
+                .collect(java.util.stream.Collectors.toList());
+    }
+
+    @Override
+    public Optional<Usuario> buscarPorId(Long id) {
+        return jpaRepository.findById(id).map(entity -> new Usuario(
+                entity.getId(), entity.getNombre(), entity.getApellidos(),
+                entity.getEmail(), entity.getUsername(), entity.getPassword(), entity.getRol()));
     }
 }
