@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Collections;
 
 @Component
 public class JwtFiltro extends OncePerRequestFilter {
@@ -34,18 +35,24 @@ public class JwtFiltro extends OncePerRequestFilter {
                 // 2. Quitamos la palabra "Bearer " para quedarnos solo con el token
                 String token = header.substring(7);
 
-                // 3. Extraemos los datos (Si el token es falso o expiró, esto dará un error y saltará al catch)
+                // 3. Extraemos los datos
                 Claims claims = jwtAdaptador.obtenerClaims(token);
 
-                // 4. Le decimos a Spring Security: "Tranquilo, yo lo conozco, déjalo pasar"
-                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(claims.getSubject(), null, null);
+                // 🚀 CORRECCIÓN 1: En lugar de 'null', le pasamos una lista vacía con Collections.emptyList()
+                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
+                        claims.getSubject(),
+                        null,
+                        Collections.emptyList()
+                );
                 SecurityContextHolder.getContext().setAuthentication(auth);
 
-                // 5. ¡TRUCO DE CAPO! Guardamos el ID del usuario en la petición para que el Controlador lo tenga a mano
-                request.setAttribute("usuarioId", claims.get("id", Long.class));
+                // 🚀 CORRECCIÓN 2: Extraemos el número de forma segura, sea Integer o Long, y lo convertimos a Long.
+                Number idNumber = (Number) claims.get("id");
+                request.setAttribute("usuarioId", idNumber.longValue());
 
             } catch (Exception e) {
-                // Token inválido, no hacemos nada y dejamos que Spring Security lo bloquee
+                // Si vuelve a fallar por lo que sea, ahora sí imprimiremos el error en tu consola para verlo
+                System.out.println("Error procesando el token: " + e.getMessage());
                 SecurityContextHolder.clearContext();
             }
         }

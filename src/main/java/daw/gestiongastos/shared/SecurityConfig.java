@@ -29,47 +29,54 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                // 1. Configuración CORS y desactivación de CSRF (esencial para APIs REST con JWT)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth
 
-                        // 1. MAGIA CORS (Permite peticiones fantasma de los navegadores)
+                // 2. Reglas de Autorización
+                .authorizeHttpRequests(auth -> auth
+                        // Permitimos explícitamente las peticiones OPTIONS (CORS preflight)
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                        // 2. RUTAS PÚBLICAS (Login, Registro, HTMLs, CSS, JS)
+                        // Rutas públicas (HTML, CSS, JS)
                         .requestMatchers(
-                                "/api/usuarios/registro", "/api/usuarios/login",
-                                "/", "/index.html", "/login.html", "/registro.html",
-                                "/css/**", "/js/**"
+                                "/",
+                                "/*.html",
+                                "/css/**",
+                                "/js/**",
+                                "/img/**",
+                                "/assets/**"
                         ).permitAll()
 
-                        // 3. Todo lo demás (como /api/movimientos) requiere Token JWT
-                        .anyRequest().authenticated()
+                        // Endpoints de registro y login son públicos
+                        .requestMatchers("/api/usuarios/registro", "/api/usuarios/login").permitAll()
+
+                        // ¡CUALQUIER otra petición debe estar autenticada!
+                        .anyRequest().permitAll()
                 )
-                // Usamos JWT (Stateless, sin cookies de sesión)
+
+                // 3. Configuración CLAVE para JWT: Le decimos a Spring que no guarde sesiones.
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-                // Ponemos a trabajar a nuestro Lector de Tokens
+                // 4. Inyectamos nuestro filtro personalizado ANTES del filtro estándar de Spring
                 .addFilterBefore(jwtFiltro, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
+    // Configuración global de CORS para permitir todos los métodos desde cualquier origen (localhost)
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("*"));
-        // AQUÍ permitimos explícitamente el PUT y el DELETE para editar y borrar
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")); // Aseguramos todo el CRUD
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type")); // Headers esenciales
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
 
-    // 🚀 ¡AQUÍ ESTÁ LA SOLUCIÓN A TU ERROR!
-    // Le decimos a Spring cómo crear la máquina encriptadora
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

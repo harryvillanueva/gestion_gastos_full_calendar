@@ -2,6 +2,7 @@ package daw.gestiongastos.usuario.infrastructure;
 
 import daw.gestiongastos.usuario.domain.ITokenGenerador;
 import daw.gestiongastos.usuario.domain.Usuario;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -13,22 +14,26 @@ import java.util.Date;
 @Component
 public class JwtAdaptador implements ITokenGenerador {
 
-    // Generamos una clave secreta segura en memoria para firmar los tokens
-    private static final Key CLAVE_SECRETA = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    // 🚀 LA SOLUCIÓN: Usamos una clave de texto fija y muy larga.
+    // Así los tokens sobrevivirán a todos los reinicios de tu servidor.
+    private static final String CLAVE_SECRETA_TEXTO = "EstaEsUnaClaveSecretaMuyLargaYSuperSeguraParaNuestroProyectoDeGestionDeGastos12345";
+    private static final Key CLAVE_SECRETA = Keys.hmacShaKeyFor(CLAVE_SECRETA_TEXTO.getBytes());
+
     private static final long TIEMPO_EXPIRACION = 86400000; // 1 día en milisegundos
 
     @Override
     public String generarToken(Usuario usuario) {
         return Jwts.builder()
                 .setSubject(usuario.getUsername())
-                .claim("rol", usuario.getRol().name()) // Metemos el rol dentro del token
-                .claim("id", usuario.getId())          // Metemos el ID para futuras consultas
+                .claim("rol", usuario.getRol().name())
+                .claim("id", usuario.getId())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + TIEMPO_EXPIRACION))
                 .signWith(CLAVE_SECRETA)
                 .compact();
     }
-    public io.jsonwebtoken.Claims obtenerClaims(String token) {
+
+    public Claims obtenerClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(CLAVE_SECRETA)
                 .build()
