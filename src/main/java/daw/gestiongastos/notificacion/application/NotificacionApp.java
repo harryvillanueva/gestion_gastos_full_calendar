@@ -1,5 +1,7 @@
-package daw.gestiongastos.notificacion.infraestructure;
+package daw.gestiongastos.notificacion.application;
 
+import daw.gestiongastos.notificacion.infraestructure.NotificacionEntity;
+import daw.gestiongastos.notificacion.infraestructure.NotificacionJpaRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;

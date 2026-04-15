@@ -3,7 +3,7 @@ package daw.gestiongastos.movimiento.application;
 import daw.gestiongastos.movimiento.domain.IMovimientoRepositorio;
 import daw.gestiongastos.movimiento.domain.Movimiento;
 import daw.gestiongastos.movimiento.domain.TipoMovimiento;
-import daw.gestiongastos.notificacion.infraestructure.NotificacionApp;
+import daw.gestiongastos.notificacion.application.NotificacionApp;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
